@@ -1,0 +1,44 @@
+# Builds the site and publishes it to GitHub Pages on every push to main.
+# The built files go to the gh-pages branch; Pages serves that branch.
+# On Pages the library runs on SQLite in the browser (PHP files aren't executed there).
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run build
+
+      # PHP only runs on a PHP server, so leave the server files out of the static site
+      - name: Remove server-only files
+        run: rm -f dist/api.php dist/lookup.php dist/config.php
+
+      - name: Publish to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+          enable_jekyll: false
+          commit_message: "Deploy ${{ github.sha }}"

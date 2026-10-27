@@ -15,7 +15,10 @@ React on the front, SQL underneath, and PHP + MySQL when it runs on a server.
 ![MySQL](https://img.shields.io/badge/MySQL%20%2F%20MariaDB-0e0e11?style=flat-square&logo=mysql&logoColor=e6dfd2)
 ![SQLite](https://img.shields.io/badge/SQLite-WebAssembly-0e0e11?style=flat-square&logo=sqlite&logoColor=e6dfd2)
 
-![Home page: split hero with a spinning record and fanned covers](screenshots/hero.png)
+**Live demo: [carlosz98.github.io/NewLibraryManagementSite](https://carlosz98.github.io/NewLibraryManagementSite/)**
+(runs entirely in your browser; your borrows and donations are saved on your device)
+
+[![Home page: split hero with a spinning record and fanned covers](screenshots/hero.png)](https://carlosz98.github.io/NewLibraryManagementSite/)
 
 ---
 
@@ -272,11 +275,13 @@ UI/UX Pro Max design guidelines.
 
 ## Deploying
 
-**GitHub Pages (browser database):** run `npm run build`, copy `dist/` into the repository's `docs/` folder, then in
-**Settings → Pages** choose *Deploy from a branch* with the `/docs` folder. PHP files are ignored there, so the site
-uses the in-browser database. "Find it online" works on the published site.
+**GitHub Pages (live demo).** [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) builds the site on every push
+to `main` and publishes it to the `gh-pages` branch. One-time setup: **Settings → Pages → Build and deployment →
+Deploy from a branch → `gh-pages` / `(root)`**. The site is then live at
+https://carlosz98.github.io/NewLibraryManagementSite/. PHP doesn't run on Pages, so the site uses the in-browser database
+there; "Find it online" works.
 
-**PHP host (MySQL):** upload the contents of `dist/` to any host with PHP 8, import `database/schema.sql` into its MySQL,
+**PHP host (MySQL).** Upload the contents of `dist/` to any host with PHP 8, import `database/schema.sql` into its MySQL,
 and set the database environment variables (or `config.local.php`).
 
 ---
