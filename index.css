@@ -1,0 +1,457 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- Base ---------- */
+@layer base {
+  :root {
+    color-scheme: dark;
+
+    /* shadcn / 21st.dev design tokens, mapped to the Library of Tomorrow palette.
+       Stored as RGB channels so Tailwind opacity modifiers (bg-primary/90) work.
+       (The site is dark-only, so these are the dark values.) */
+    --background: 14 14 17;          /* ink */
+    --foreground: 230 223 210;          /* bone */
+    --card: 26 27 32;                /* slate */
+    --card-foreground: 230 223 210;
+    --primary: 230 223 210;
+    --primary-foreground: 14 14 17;
+    --secondary: 35 37 44;
+    --secondary-foreground: 230 223 210;
+    --muted: 35 37 44;
+    --muted-foreground: 154 149 140;    /* ash */
+    --accent: 138 52 66;              /* wine */
+    --accent-foreground: 243 234 211;
+    --accent-strong: 201 168 101;       /* gold */
+    --destructive: 224 112 122;
+    --destructive-foreground: 14 14 17;
+    --border: 46 47 54;
+    --input: 58 59 66;
+    --ring: 201 168 101;                /* gold, same as the site's focus ring */
+    --radius: 0.125rem;             /* nearly square, like the rest of the site */
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-ink text-bone font-sans antialiased;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+  }
+  :focus-visible {
+    outline: 2px solid theme("colors.gold");
+    outline-offset: 3px;
+  }
+  button, a, [role="button"], label:has(input[type="radio"]) {
+    cursor: pointer;
+  }
+  ::selection {
+    background: theme("colors.ochre");
+    color: theme("colors.ink");
+  }
+}
+
+@layer components {
+  /* small uppercase labels: wide-tracked thin caps, like the "Make it scream" reference */
+  .label {
+    @apply font-display font-medium uppercase text-ash;
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+  }
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.28) 0 1px, transparent 1.5px) 0 0 / 4px 4px;
+    mix-blend-mode: multiply;
+    opacity: 0.6;
+  }
+  .skeleton {
+    @apply animate-pulse bg-slate2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-spin33 {
+    animation: none !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ---------- Vinyl record surface (hero, LPs, mini discs) ---------- */
+.record-surface {
+  border-radius: 9999px;
+  background:
+    conic-gradient(from 20deg, transparent 0 8%, rgba(230, 223, 210, 0.16) 12%, transparent 16% 55%, rgba(230, 223, 210, 0.1) 60%, transparent 64%),
+    repeating-radial-gradient(circle, #0c0c0e 0 2px, #1d1d21 2px 3.5px);
+}
+
+/* =========================================================
+   Generated covers
+   Every size is in container units (cqw), so a cover looks the
+   same in a 250px card and a 520px description page.
+   ========================================================= */
+.cover {
+  container-type: inline-size;
+  position: relative;
+  aspect-ratio: 5 / 4;
+  width: 100%;
+  overflow: hidden;
+  display: grid;
+  place-items: end center;
+  padding-bottom: 7%;
+  background: linear-gradient(var(--angle, 115deg), var(--c1) 0 54%, #cfc7b8 54% 55.2%, var(--c2) 55.2%);
+}
+.cover::after {
+  /* film grain over everything */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.25) 0 1px, transparent 1.5px) 0 0 / 4px 4px;
+  mix-blend-mode: multiply;
+  opacity: 0.55;
+  pointer-events: none;
+}
+.cover--tall {
+  aspect-ratio: 4 / 5;
+}
+
+.ed {
+  position: relative;
+  overflow: hidden;
+  color: #ece5d8;
+  box-shadow: 10px 14px 24px rgba(0, 0, 0, 0.55);
+  rotate: -3deg;
+  transition: rotate 0.3s ease, translate 0.3s ease;
+}
+.group:hover .ed {
+  rotate: 0deg;
+  translate: 0 -6px;
+}
+
+/* book: dust jacket, 2:3 */
+.ed--book {
+  width: 42%;
+  aspect-ratio: 2 / 3;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  padding: 9% 9% 8% 14%;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.35) 0 6%, rgba(255, 255, 255, 0.08) 6% 7%, transparent 7%),
+    linear-gradient(var(--angle, 115deg), var(--obj) 0 62%, var(--c2) 62%);
+  border-radius: 2px 4px 4px 2px;
+}
+.ed--book .ed__a {
+  font: 300 3cqw/1.2 "Barlow", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  overflow-wrap: break-word;
+  hyphens: manual;
+}
+.ed__rule {
+  height: 1px;
+  margin: 7% 0;
+  background: rgba(236, 229, 216, 0.6);
+}
+.ed--book .ed__t {
+  font: 800 6cqw/0.95 "Barlow Condensed", sans-serif;
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+  hyphens: manual;
+}
+.ed__mark {
+  justify-self: start;
+  width: 1.7em;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(236, 229, 216, 0.7);
+  border-radius: 50%;
+  font: 600 2.6cqw/1 "Barlow", sans-serif;
+  letter-spacing: 0.06em;
+}
+
+/* manga: tankōbon volume, spine on the right (manga reads right to left) */
+.ed--manga {
+  width: 36%;
+  aspect-ratio: 5 / 7.2;
+  display: grid;
+  grid-template-rows: 1fr auto auto;
+  padding: 10% 18% 0 9%;
+  background:
+    linear-gradient(270deg, var(--c2) 0 11%, rgba(0, 0, 0, 0.3) 11% 12%, transparent 12%),
+    radial-gradient(circle at 30% 30%, rgba(236, 229, 216, 0.12) 0 30%, transparent 31%),
+    var(--obj);
+  border-radius: 4px 2px 2px 4px;
+  rotate: 3deg;
+}
+.ed__vol {
+  font: 800 15cqw/0.8 "Barlow Condensed", sans-serif;
+  color: rgba(236, 229, 216, 0.85);
+}
+.ed--manga .ed__t {
+  font: 700 4.6cqw/0.95 "Barlow Condensed", sans-serif;
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+  hyphens: manual;
+}
+.ed--manga .ed__a {
+  margin: 8% -22% 0 -10%;
+  padding: 5% 10%;
+  background: #cfc7b8;
+  color: #121216;
+  font: 600 2.6cqw/1.2 "Barlow", sans-serif;
+  letter-spacing: 0.14em;
+  overflow-wrap: break-word;
+  hyphens: manual;
+}
+
+/* comic: single issue, 2:3 */
+.ed--comic {
+  width: 42%;
+  aspect-ratio: 2 / 3;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto 1fr auto;
+  background: var(--c2);
+  border: 3px solid #cfc7b8;
+  border-radius: 1px;
+}
+.ed__mast {
+  grid-column: 1 / -1;
+  padding: 6% 7% 5%;
+  background: var(--obj);
+  font: 800 4.9cqw/0.9 "Barlow Condensed", sans-serif;
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+  hyphens: manual;
+}
+.ed__issue {
+  padding: 4% 7%;
+  font: 600 2.6cqw/1.2 "JetBrains Mono", monospace;
+  letter-spacing: 0.06em;
+}
+.ed__price {
+  margin: 3% 6% 0 0;
+  padding: 2px 4px;
+  align-self: start;
+  border: 1px solid #ece5d8;
+  font: 600 2.6cqw/1 "JetBrains Mono", monospace;
+}
+.ed__panel {
+  grid-column: 1 / -1;
+  margin: 2% 7%;
+  border: 2px solid #121216;
+  background:
+    radial-gradient(circle at 70% 35%, rgba(236, 229, 216, 0.5) 0 14%, transparent 15%),
+    repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.25) 0 2px, transparent 2px 6px),
+    var(--c1);
+}
+.ed--comic .ed__a {
+  grid-column: 1 / -1;
+  padding: 3% 7% 6%;
+  font: 300 2.6cqw/1.2 "Barlow", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  overflow-wrap: break-word;
+  hyphens: manual;
+}
+
+/* vinyl: square sleeve, record peeking out */
+.ed--lp {
+  width: 64%;
+  aspect-ratio: 1.25;
+  overflow: visible;
+  box-shadow: none;
+  rotate: 0deg;
+}
+.group:hover .ed--lp {
+  translate: 0;
+}
+.ed__disc {
+  position: absolute;
+  top: 6%;
+  right: 0;
+  height: 88%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #121216 0 3%, var(--c2) 3.5% 21%, transparent 21.5%),
+    conic-gradient(from 20deg, transparent 0 8%, rgba(230, 223, 210, 0.16) 12%, transparent 16% 55%, rgba(230, 223, 210, 0.1) 60%, transparent 64%),
+    repeating-radial-gradient(circle, #0c0c0e 0 2px, #1d1d21 2px 3.5px);
+  box-shadow: 8px 10px 20px rgba(0, 0, 0, 0.5);
+  transition: right 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.group:hover .ed__disc {
+  right: -12%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .group:hover .ed__disc {
+    animation: spin33 1.8s linear infinite;
+  }
+}
+.ed__sleeve {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  aspect-ratio: 1;
+  display: grid;
+  align-content: end;
+  padding: 9%;
+  background: linear-gradient(var(--angle, 115deg), var(--obj) 0 55%, #cfc7b8 55% 56.5%, var(--c1) 56.5%);
+  box-shadow: 10px 14px 24px rgba(0, 0, 0, 0.55);
+}
+.ed--lp .ed__t {
+  font: 800 5.1cqw/0.95 "Barlow Condensed", sans-serif;
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+  hyphens: manual;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+}
+.ed--lp .ed__a {
+  margin-top: 4%;
+  font: 300 2.9cqw/1.2 "Barlow", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  overflow-wrap: break-word;
+  hyphens: manual;
+}
+.ed__sticker {
+  position: absolute;
+  top: 8%;
+  right: 8%;
+  width: 2.6em;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #cfc7b8;
+  color: #121216;
+  font: 700 2.9cqw/1 "JetBrains Mono", monospace;
+  rotate: 12deg;
+}
+
+/* film: VHS box */
+.vhs {
+  position: relative;
+  width: 37%;
+  aspect-ratio: 104 / 188; /* real VHS box proportions */
+  border-radius: 3px;
+  background: #0d0d10; /* black plastic clamshell */
+  padding: 4%;
+  box-shadow:
+    -9px 0 0 -1px #1b1b20,
+    -9px 0 0 0 #2a2a30,
+    10px 14px 24px rgba(0, 0, 0, 0.55);
+  rotate: -3deg;
+  transition: rotate 0.3s ease, translate 0.3s ease;
+}
+.group:hover .vhs {
+  rotate: 0deg;
+  translate: 0 -6px;
+}
+.vhs::before {
+  /* sheen on the plastic sleeve */
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: 3px;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.12) 0 18%, transparent 30% 100%);
+  pointer-events: none;
+}
+.vhs__face {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto auto;
+  background: linear-gradient(var(--angle, 115deg), var(--obj) 0 48%, #cfc7b8 48% 49.5%, var(--c2) 49.5%);
+  color: #ece5d8;
+}
+.vhs__badge {
+  justify-self: start;
+  margin: 6% 0 0 6%;
+  padding: 1px 5px;
+  background: #cfc7b8;
+  color: #121216;
+  font: 800 3.1cqw/1.3 "Barlow", sans-serif;
+  letter-spacing: 0.12em;
+}
+.vhs__art {
+  /* abstract generated key art: a dim sun over scan lines */
+  margin: 6% 10%;
+  border-radius: 50%;
+  aspect-ratio: 1;
+  align-self: center;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(236, 229, 216, 0.55) 0 22%, transparent 23%),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.35) 0 2px, transparent 2px 6px);
+  opacity: 0.8;
+}
+.vhs__t {
+  padding: 0 7%;
+  font: 800 5.4cqw/0.95 "Barlow Condensed", sans-serif;
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+  hyphens: manual;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+}
+.vhs__d {
+  padding: 3% 7% 0;
+  font: 300 2.9cqw/1.2 "Barlow", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  overflow-wrap: break-word;
+  hyphens: manual;
+}
+.vhs__foot {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6%;
+  padding: 3% 7%;
+  background: #121216;
+  font: 500 2.6cqw/1 "JetBrains Mono", monospace;
+  letter-spacing: 0.06em;
+  color: #9a958c;
+}
+
+/* borrowed: a smoky band across the cover */
+.cover.is-out {
+  filter: saturate(0.5) brightness(0.8);
+}
+.cover.is-out::before {
+  content: "On loan";
+  position: absolute;
+  z-index: 3;
+  left: -10%;
+  right: -10%;
+  top: 40%;
+  padding: 8px 0;
+  rotate: -9deg;
+  background: rgba(12, 12, 14, 0.88);
+  color: #cfc7b8;
+  text-align: center;
+  font: 300 5.5cqw/1 "Barlow Condensed", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5em;
+}
+.cover.is-out .ed,
+.cover.is-out .vhs {
+  opacity: 0.7;
+}
+
+/* tall covers (description page, hero fan): the object fills more of the frame */
+.cover--tall .ed,
+.cover--tall .vhs {
+  scale: 1.45;
+  transform-origin: 50% 100%;
+}
